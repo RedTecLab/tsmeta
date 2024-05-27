@@ -1,0 +1,93 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: cimg/node:16
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: 'Install Dependencies'
+          command: 'yarn'
+      - run:
+          name: 'Build'
+          command: 'yarn build'
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+  test:
+    <<: *defaults
+    steps:
+      - run:
+          name: 'Test'
+          command: 'echo "placeholder for test step"'
+      # - checkout
+      # - restore_cache:
+      #     keys:
+      #       - v1-dependencies-{{ checksum "package.json" }}
+      #       - v1-dependencies-
+      # - run:
+      #     name: 'Install Dependencies'
+      #     command: 'yarn'
+      # - run:
+      #     name: 'Run Tests'
+      #     command: 'yarn test'
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #     key: v1-dependencies-{{ checksum "package.json" }}
+      # - persist_to_workspace:
+      #     root: ~/repo
+      #     paths: .
+  release:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Avoid hosts unknown for github
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      - run:
+          name: create-npmrc
+          command: |
+            echo "//npm.pkg.github.com/:_authToken=${GH_REGISTRY_TOKEN}" > ~/.npmrc
+            echo "@redteclab:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+      - run:
+          name: Define environment variables
+          command: |
+            echo 'export GH_TOKEN=${GH_REGISTRY_TOKEN}' >> $BASH_ENV
+            source $BASH_ENV
+      - run: |
+          npm config set registry https://npm.pkg.github.com
+          npx semantic-release
+      - run:
+          name: remove npmrc
+          command: |
+            rm -f ~/.npmrc
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - release:
+          context: credentials
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

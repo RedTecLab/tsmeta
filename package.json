@@ -1,10 +1,10 @@
 {
-  "name": "tsmeta",
+  "name": "@redteclab/tsmeta",
   "main": "dist/index.js",
   "bin": "dist/bin.js",
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
-  "version": "0.12.7",
+  "version": "0.13.0",
   "description": "typescript project meta analysis",
   "engines": {
     "node": "16.x.x"

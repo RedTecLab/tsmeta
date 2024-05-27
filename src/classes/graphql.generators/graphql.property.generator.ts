@@ -33,6 +33,11 @@ class GraphQLPropertyGenerator {
         ? (propertyArgument.representation as PropertyParam)
         : undefined
 
+    if (propertyParam?.enforcedFormat) {
+      const enforcedType: string = this.mapTypeToGraphQLType(propertyParam?.format)
+      return `${tsProperty.name}: ${enforcedType}`
+    }
+
     switch (tsType.typescriptType) {
       case TypescriptTypes.ARRAY:
         const arrayType: string =
