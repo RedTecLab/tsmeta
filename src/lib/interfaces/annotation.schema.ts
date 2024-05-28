@@ -5,6 +5,12 @@ import { OasFormat } from '../enums/oas.format.enum'
 export interface PropertyParam {
   enum?: string[] // tslint:disable-line no-reserved-keywords
   format?: OasFormat
+  /**
+   * when dealing with types not already supported,
+   * we can simply use this property param to enforce the
+   * `format` above all other typedef meta handling logic
+   */
+  enforcedFormat?: boolean
   required?: boolean
   version?: string
 }
