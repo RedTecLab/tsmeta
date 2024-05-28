@@ -4,7 +4,7 @@
   "bin": "dist/bin.js",
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
-  "version": "0.13.0",
+  "version": "1.0.0",
   "description": "typescript project meta analysis",
   "engines": {
     "node": "22.x.x"
