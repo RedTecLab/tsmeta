@@ -6,7 +6,6 @@ import { TokenToString } from '../../lib/utils/token.to.string'
  * class TsMetaExportFactory
  */
 class TsMetaExportFactory {
-
   /**
    * build TsExport element
    */
@@ -15,10 +14,10 @@ class TsMetaExportFactory {
       return [this.createTsExport(exportDeclaration.moduleSpecifier as Identifier)]
     }
 
-    if (exportDeclaration.exportClause) {
-      return exportDeclaration.exportClause.elements
-        .map((exportSpecifier: ExportSpecifier) =>
-          this.createTsExport(exportSpecifier.name as Identifier, exportSpecifier.propertyName as Identifier))
+    if (exportDeclaration.exportClause && 'elements' in exportDeclaration.exportClause) {
+      return exportDeclaration.exportClause.elements.map((exportSpecifier: ExportSpecifier) =>
+        this.createTsExport(exportSpecifier.name as Identifier, exportSpecifier.propertyName as Identifier)
+      )
     }
 
     return undefined
