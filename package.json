@@ -4,10 +4,10 @@
   "bin": "dist/bin.js",
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "typescript project meta analysis",
   "engines": {
-    "node": "22.x.x"
+    "node": ">=14.17.3"
   },
   "keywords": [
     "typescript",
