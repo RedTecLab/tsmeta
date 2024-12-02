@@ -29,7 +29,7 @@ class TsMetaImportFactory {
       ]
     }
 
-    importClause.namedBindings.forEachChild((node: ImportSpecifier) => {
+    importClause.namedBindings?.forEachChild((node: ImportSpecifier) => {
       tsImports.push(this.createTsImport(node, moduleSpecifier))
     })
 
